@@ -1,0 +1,218 @@
+<html>
+<head>
+<title>MomentDetails.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MomentDetails.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.rdv_app_meunier_nicolas</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.DatePickerDialog</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.TimePickerDialog</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.net.Uri</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.DatePicker</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.EditText</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TextView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TimePicker</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.sql.SQLException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Calendar</span><span class="s0">;</span>
+
+
+<span class="s0">public class </span><span class="s1">MomentDetails </span><span class="s0">extends </span><span class="s1">AppCompatActivity{</span>
+    <span class="s1">EditText etTitle</span><span class="s0">,</span><span class="s1">etDate</span><span class="s0">;</span>
+    <span class="s1">TextView tvId</span><span class="s0">;</span>
+
+    <span class="s0">int </span><span class="s1">day</span><span class="s0">,</span><span class="s1">month</span><span class="s0">,</span><span class="s1">year</span><span class="s0">,</span><span class="s1">minute</span><span class="s0">,</span><span class="s1">hour</span><span class="s0">;</span>
+    <span class="s1">Button btnPickDate</span><span class="s0">,</span><span class="s1">btnPickTime</span><span class="s0">,</span><span class="s1">btnCall</span><span class="s0">;</span>
+    <span class="s1">EditText etTime</span><span class="s0">;</span>
+    <span class="s1">EditText etAdresse</span><span class="s0">, </span><span class="s1">etPhone</span><span class="s0">,</span><span class="s1">etContact</span><span class="s0">;</span>
+    <span class="s1">DatePickerDialog.OnDateSetListener onDate</span><span class="s0">;</span>
+    <span class="s1">TimePickerDialog.OnTimeSetListener onTime</span><span class="s0">;</span>
+    <span class="s1">DatabaseHelper myHelper</span><span class="s0">;</span>
+    <span class="s0">boolean </span><span class="s1">fromAdd</span><span class="s0">;</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_moment_details)</span><span class="s0">;</span>
+
+
+
+        <span class="s1">etTitle = (EditText) findViewById(R.id.etTitle)</span><span class="s0">;</span>
+        <span class="s1">etDate = (EditText) findViewById(R.id.etDate)</span><span class="s0">;</span>
+        <span class="s1">etTime = (EditText) findViewById(R.id.etTime)</span><span class="s0">;</span>
+        <span class="s1">tvId = (TextView) findViewById(R.id.tvId)</span><span class="s0">;</span>
+        <span class="s1">myHelper = </span><span class="s0">new </span><span class="s1">DatabaseHelper(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">try </span><span class="s1">{</span>
+            <span class="s1">myHelper.open()</span><span class="s0">;</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(SQLException throwables) {</span>
+            <span class="s1">throwables.printStackTrace()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s1">etContact = (EditText) findViewById(R.id.etContact)</span><span class="s0">;</span>
+        <span class="s1">etAdresse = (EditText) findViewById(R.id.etAdresse)</span><span class="s0">;</span>
+        <span class="s1">etPhone = findViewById(R.id.etPhone)</span><span class="s0">;</span>
+        <span class="s1">btnCall = findViewById(R.id.btnCall)</span><span class="s0">;</span>
+        <span class="s1">btnPickDate=(Button)findViewById(R.id.btnPickDate)</span><span class="s0">;</span>
+
+        <span class="s1">btnPickTime=(Button)findViewById(R.id.btnPickTime)</span><span class="s0">;</span>
+
+        <span class="s1">Intent intent = getIntent()</span><span class="s0">;</span>
+        <span class="s1">fromAdd= intent.getBooleanExtra(</span><span class="s2">&quot;fromAdd&quot;</span><span class="s0">,false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(!fromAdd){</span>
+            <span class="s1">Bundle b= intent.getExtras()</span><span class="s0">;</span>
+            <span class="s1">Moment selectedMoment= b.getParcelable(</span><span class="s2">&quot;SelectedMoment&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">tvId.setText(String.valueOf(selectedMoment.getId()))</span><span class="s0">;</span>
+            <span class="s1">etTitle.setText(selectedMoment.getTitle())</span><span class="s0">;</span>
+            <span class="s1">etDate.setText(selectedMoment.getDate())</span><span class="s0">;</span>
+            <span class="s1">etTime.setText(selectedMoment.getTime())</span><span class="s0">;</span>
+            <span class="s1">etAdresse.setText(selectedMoment.getAdress())</span><span class="s0">;</span>
+            <span class="s1">etPhone.setText(selectedMoment.getPhone())</span><span class="s0">;</span>
+            <span class="s1">etContact.setText(selectedMoment.getContact())</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+
+
+        <span class="s1">btnCall.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener(){</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View v){</span>
+
+                <span class="s1">String phone = </span><span class="s2">&quot;tel:&quot; </span><span class="s1">+ etPhone.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(Intent.ACTION_DIAL)</span><span class="s0">;</span>
+                <span class="s1">intent.setData(Uri.parse(phone))</span><span class="s0">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">onDate = </span><span class="s0">new </span><span class="s1">DatePickerDialog.OnDateSetListener() {</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onDateSet(DatePicker view</span><span class="s0">, int </span><span class="s1">year</span><span class="s0">, int </span><span class="s1">month</span><span class="s0">, int </span><span class="s1">dayOfMonth) {</span>
+                <span class="s1">year = year</span><span class="s0">;</span>
+                <span class="s1">month = month</span><span class="s0">;</span>
+                <span class="s1">day = dayOfMonth</span><span class="s0">;</span>
+                <span class="s1">etDate.setText(</span><span class="s0">new </span><span class="s1">StringBuilder().append(month + </span><span class="s3">1</span><span class="s1">).append(</span><span class="s2">&quot;-&quot;</span><span class="s1">).append(day).append(</span><span class="s2">&quot;-&quot;</span><span class="s1">).append(year).append(</span><span class="s2">&quot; &quot;</span><span class="s1">))</span><span class="s0">;</span>
+
+            <span class="s1">}</span>
+        <span class="s1">}</span><span class="s0">;</span>
+        <span class="s1">onTime = </span><span class="s0">new </span><span class="s1">TimePickerDialog.OnTimeSetListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onTimeSet(TimePicker view</span><span class="s0">, int </span><span class="s1">minute</span><span class="s0">, int </span><span class="s1">hour) {</span>
+                <span class="s1">hour = hour</span><span class="s0">;</span>
+                <span class="s1">minute = minute</span><span class="s0">;</span>
+                <span class="s1">etTime.setText(</span><span class="s0">new </span><span class="s1">StringBuilder().append(minute).append(</span><span class="s2">&quot;:&quot;</span><span class="s1">).append(hour).append(</span><span class="s2">&quot; &quot;</span><span class="s1">))</span><span class="s0">;</span>
+
+            <span class="s1">}</span>
+        <span class="s1">}</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">onClick(View v){</span>
+
+        <span class="s1">String phone = </span><span class="s2">&quot;tel:&quot; </span><span class="s1">+ etPhone.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(Intent.ACTION_DIAL)</span><span class="s0">;</span>
+        <span class="s1">intent.setData(Uri.parse(phone))</span><span class="s0">;</span>
+        <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">launchMaps(View view) {</span>
+        <span class="s1">String map = </span><span class="s2">&quot;http://maps.google.co.in/maps?q=&quot; </span><span class="s1">+ etAdresse.getText() </span><span class="s0">;</span>
+        <span class="s1">Uri gmmIntentUri = Uri.parse(map)</span><span class="s0">;</span>
+        <span class="s1">Intent mapIntent = </span><span class="s0">new </span><span class="s1">Intent(Intent.ACTION_VIEW</span><span class="s0">, </span><span class="s1">gmmIntentUri)</span><span class="s0">;</span>
+        <span class="s1">mapIntent.setPackage(</span><span class="s2">&quot;com.google.android.apps.maps&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">String adresse2 = etAdresse.getText().toString()</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(adresse2.isEmpty()== </span><span class="s0">false</span><span class="s1">) {</span>
+            <span class="s1">startActivity(mapIntent)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">else </span><span class="s1">{ Toast.makeText(getApplicationContext()</span><span class="s0">,</span><span class="s2">&quot;Merci d'écrire une adresse!&quot;</span><span class="s0">,</span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span><span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">pickDate(View v){</span>
+        <span class="s1">showDatePicker()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">pickTime(View v){</span>
+        <span class="s1">showTimePicker()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">showTimePicker() {</span>
+
+        <span class="s1">TimePickerFragment time= </span><span class="s0">new </span><span class="s1">TimePickerFragment()</span><span class="s0">;</span>
+
+        <span class="s0">final </span><span class="s1">Calendar c = Calendar.getInstance()</span><span class="s0">;</span>
+        <span class="s1">minute = c.get(Calendar.MINUTE)</span><span class="s0">;</span>
+        <span class="s1">hour = c.get(Calendar.HOUR)</span><span class="s0">;</span>
+
+        <span class="s1">Bundle args = </span><span class="s0">new </span><span class="s1">Bundle()</span><span class="s0">;</span>
+        <span class="s1">args.putInt(</span><span class="s2">&quot;minute&quot;</span><span class="s0">,</span><span class="s1">minute)</span><span class="s0">;</span>
+        <span class="s1">args.putInt(</span><span class="s2">&quot;hour&quot;</span><span class="s0">,</span><span class="s1">hour)</span><span class="s0">;</span>
+
+        <span class="s1">time.setArguments(args)</span><span class="s0">;</span>
+        <span class="s1">time.setCallBack(onTime)</span><span class="s0">;</span>
+        <span class="s1">time.show(getSupportFragmentManager()</span><span class="s0">,</span><span class="s2">&quot;Time Picker&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">showDatePicker() {</span>
+
+        <span class="s1">DatePickerFragment date= </span><span class="s0">new </span><span class="s1">DatePickerFragment()</span><span class="s0">;</span>
+
+        <span class="s0">final </span><span class="s1">Calendar c = Calendar.getInstance()</span><span class="s0">;</span>
+        <span class="s1">year = c.get(Calendar.YEAR)</span><span class="s0">;</span>
+        <span class="s1">month = c.get(Calendar.MONTH)</span><span class="s0">;</span>
+        <span class="s1">day = c.get(Calendar.DAY_OF_MONTH)</span><span class="s0">;</span>
+
+        <span class="s1">Bundle args = </span><span class="s0">new </span><span class="s1">Bundle()</span><span class="s0">;</span>
+        <span class="s1">args.putInt(</span><span class="s2">&quot;year&quot;</span><span class="s0">,</span><span class="s1">year)</span><span class="s0">;</span>
+        <span class="s1">args.putInt(</span><span class="s2">&quot;month&quot;</span><span class="s0">,</span><span class="s1">month)</span><span class="s0">;</span>
+        <span class="s1">args.putInt(</span><span class="s2">&quot;day&quot;</span><span class="s0">,</span><span class="s1">day)</span><span class="s0">;</span>
+
+        <span class="s1">date.setArguments(args)</span><span class="s0">;</span>
+        <span class="s1">date.setCallBack(onDate)</span><span class="s0">;</span>
+        <span class="s1">date.show(getSupportFragmentManager()</span><span class="s0">,</span><span class="s2">&quot;Date Picker&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">onCancelClick(View v){</span>
+<span class="s4">//Intent intent = new Intent(this,MainActivity.class);</span>
+        <span class="s4">// startActivity(intent);</span>
+        <span class="s1">finish()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">saveMoment(View view) {</span>
+        <span class="s1">String title= etTitle.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">String date=etDate.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">String time = etTime.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">String adress = etAdresse.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">String phone = etPhone.getText().toString()</span><span class="s0">;</span>
+        <span class="s1">String contact = etContact.getText().toString()</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(fromAdd) {</span>
+            <span class="s1">Moment moment = </span><span class="s0">new </span><span class="s1">Moment(title</span><span class="s0">,</span><span class="s1">date</span><span class="s0">,</span><span class="s1">time</span><span class="s0">,</span><span class="s1">adress</span><span class="s0">,</span><span class="s1">phone</span><span class="s0">,</span><span class="s1">contact)</span><span class="s0">;</span>
+            <span class="s1">myHelper.add(moment)</span><span class="s0">;</span>
+
+            <span class="s1">Intent main = </span><span class="s0">new </span><span class="s1">Intent(</span><span class="s0">this,</span><span class="s1">MainActivity.</span><span class="s0">class</span><span class="s1">).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)</span><span class="s0">;</span>
+            <span class="s1">startActivity(main)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">else </span><span class="s1">{</span>
+            <span class="s1">Long id = Long.parseLong(tvId.getText().toString())</span><span class="s0">;</span>
+            <span class="s1">Moment moment = </span><span class="s0">new </span><span class="s1">Moment(id</span><span class="s0">,</span><span class="s1">title</span><span class="s0">,</span><span class="s1">date</span><span class="s0">,</span><span class="s1">time</span><span class="s0">,</span><span class="s1">adress</span><span class="s0">,</span><span class="s1">phone</span><span class="s0">,</span><span class="s1">contact)</span><span class="s0">;</span>
+            <span class="s0">int </span><span class="s1">n = myHelper.update(moment)</span><span class="s0">;</span>
+
+            <span class="s1">Intent main = </span><span class="s0">new </span><span class="s1">Intent(</span><span class="s0">this,</span><span class="s1">MainActivity.</span><span class="s0">class</span><span class="s1">).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)</span><span class="s0">;</span>
+            <span class="s1">startActivity(main)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>DatePickerFragment.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DatePickerFragment.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.rdv_app_meunier_nicolas</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.app.DatePickerDialog</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.Dialog</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.annotation.Nullable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.fragment.app.DialogFragment</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">DatePickerFragment </span><span class="s0">extends </span><span class="s1">DialogFragment {</span>
+
+    <span class="s0">int </span><span class="s1">day</span><span class="s0">,</span><span class="s1">month</span><span class="s0">,</span><span class="s1">year</span><span class="s0">;</span>
+    <span class="s1">DatePickerDialog.OnDateSetListener dateSet</span><span class="s0">;</span>
+
+    <span class="s0">public </span><span class="s1">DatePickerFragment(){</span>
+
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">setCallBack(DatePickerDialog.OnDateSetListener onDate){</span>
+        <span class="s1">dateSet=onDate</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">setArguments(@Nullable Bundle args) {</span>
+        <span class="s0">super</span><span class="s1">.setArguments(args)</span><span class="s0">;</span>
+        <span class="s1">year= args.getInt(</span><span class="s2">&quot;year&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">month=args.getInt(</span><span class="s2">&quot;month&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">day=args.getInt(</span><span class="s2">&quot;day&quot;</span><span class="s1">)</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">Dialog onCreateDialog(Bundle savedInstanceState){</span>
+        <span class="s0">return new </span><span class="s1">DatePickerDialog(getActivity()</span><span class="s0">,</span><span class="s1">dateSet</span><span class="s0">,</span><span class="s1">year</span><span class="s0">,</span><span class="s1">month</span><span class="s0">,</span><span class="s1">day)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>
